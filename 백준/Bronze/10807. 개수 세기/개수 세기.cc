@@ -4,7 +4,7 @@ using namespace std;
 int main()
 {
 	int n, random, v;
-	
+
 	cin >> n;
 
 	int* ary = new int[n]; // 1차원 배열 동적 할당
@@ -13,7 +13,7 @@ int main()
 		cin >> random;
 		ary[i] = random;
 	}
-	
+
 	cin >> v;
 
 	int count = 0;

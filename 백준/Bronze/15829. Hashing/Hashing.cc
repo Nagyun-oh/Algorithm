@@ -1,19 +1,11 @@
 #include <iostream>
 #include <string>
 using namespace std;
+long long M = 1234567891;
 
-int pow(int number, int ex)
-{
-	
-	if (ex == 0)return 1;
-	
-	return number * pow(number, ex - 1);
-}
 
 int main()
 {	
-
-
 	int L;
 	string str;
 	cin >> L >> str;
@@ -24,18 +16,20 @@ int main()
 	
 	for (int i = 0; i < n; i++)
 	{
-		ary[i] = str[i] - 97+1;
+		ary[i] = str[i] - 96;
 	}
 
-	int sum = 0;
-
+	
+	long long hash = 0;
+	long long r = 1;
 	for (int i = 0; i < n; i++)
 	{
-		int p = pow(31, i);
-		sum += ary[i] * p;
+		hash = (hash+(ary[i] * r))%M;
+		r = (r * 31) % M;
+		
 	}
 
-	cout << sum;
+	cout << hash;
 
 	return 0;
 }

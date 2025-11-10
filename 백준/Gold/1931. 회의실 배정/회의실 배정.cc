@@ -3,30 +3,47 @@
 #include <algorithm>
 using namespace std;
 
+int N; // 1 <= N <= 100,000
+int start, End;
+vector<pair<int, int>>list;
+
+void init() {
+	
+	cin >> N;
+
+	for (int i = 0; i < N; i++) {
+		cin >> start >> End;
+		list.push_back(make_pair(End, start));
+	}
+}
+
+void solve()
+{
+	sort(list.begin(), list.end()); // 종료시간을 기준으로 오름차순 정렬
+
+	int time = list[0].first;
+	int count = 1;
+
+	for (int i = 1; i < N; i++)
+	{
+		if (time <= list[i].second)
+		{
+			count++;
+			time = list[i].first;
+		}
+	}
+	cout << count;
+}
+
+// 종료시간이 중요함
 int main()
 {
-    int n;
-    cin >> n;
-    vector<pair<int, int>> list;
+	ios::sync_with_stdio(false);
+	cin.tie(0);
+	cout.tie(0);
 
-    for (int i = 0; i < n; i++)
-    {
-        int start, end;
-        cin >> end >> start;
-        list.push_back(make_pair(start, end));
-    }
-    sort(list.begin(), list.end());
+	init();
+	solve();
 
-    int time = list[0].first;
-    int ans = 1;
-    int j = 0;
-    for (int i = 1; i <= n; i++)
-    {
-        if (list[i].second >= time)
-        {
-            ans++;
-            time = list[i].first;
-        }
-    }
-    cout << ans;
+	return 0;
 }

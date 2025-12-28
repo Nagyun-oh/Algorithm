@@ -16,6 +16,7 @@ int direct[4][2] = {
     0,1 // 우
 };
 
+// 정상인인 경우 dfs
 void dfs(int y, int x) {
     
     visit[y][x] = 1;
@@ -34,6 +35,7 @@ void dfs(int y, int x) {
 
 }
 
+// 적록색맹인 경우 dfs
 void dfs2(int y, int x) {
 
     visit[y][x] = 1;
@@ -75,6 +77,7 @@ void dfs2(int y, int x) {
 
 int main() {
 
+    //입력 처리
     int N;
     cin >> N;
     for (int i = 0; i < N; i++) {
@@ -83,7 +86,7 @@ int main() {
         }
     }
 
-    
+    // 정상인인 경우 : cnt1에 결과 저장
     for (int i = 0; i < N; i++) {
         for (int j = 0; j < N; j++) {
             if (!visit[i][j]) {
@@ -92,8 +95,10 @@ int main() {
             }
         }
     }
+
     memset(visit, 0, sizeof(visit));
 
+    // 적록색맹인 경우 : cnt2에 결과 저장
     for (int i = 0; i < N; i++) {
         for (int j = 0; j < N; j++) {
             if (!visit[i][j]) {
@@ -103,6 +108,7 @@ int main() {
         }
     }
 
+    //결과 출력
     cout << cnt1 << " " << cnt2;
 
 }

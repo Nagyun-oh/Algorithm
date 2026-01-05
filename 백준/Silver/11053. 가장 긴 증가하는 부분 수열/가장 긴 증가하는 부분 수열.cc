@@ -16,15 +16,13 @@ int main()
 	}
 	
 	for (int i = 1; i <= N; i++) {
-		int ans = 0;
 		for (int j = 1; j < i; j++) {
-			if (ary[i] > ary[j]) ans = max(dp[j], ans);
+			if (ary[i] > ary[j]) dp[i] = max(dp[j] + 1, dp[i]);
 		}
-		dp[i] = ans + 1;
 	}
 
 	sort(dp+1, dp + N+1);
-	cout << dp[N];
+	cout << dp[N]+1;
 	
 
 	return 0;

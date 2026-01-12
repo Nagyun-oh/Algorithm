@@ -6,16 +6,14 @@ using namespace std;
 
 string solution(string my_string, vector<int> indices) {
     string answer = "";
-    int flag = 0;
-    sort(indices.begin(),indices.end());
-    for(int i=0;i<my_string.size();i++){
-        flag = 0;
-    for(int j=0;j<indices.size();j++){
-        if(i==indices[j]) {
-            flag = 1;
-        }
+    
+    for(int i : indices){
+        my_string[i] = ' ';
     }
-        if(!flag) answer+=my_string[i];
+    
+    for(const auto str : my_string){
+        if(str !=' ') answer+=str;
     }
+    
     return answer;
 }

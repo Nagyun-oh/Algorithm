@@ -2,7 +2,7 @@
 #include <vector>
 
 using namespace std;
-int hashTable[100001] = {0,};
+int hashTable[31] = {0,};
 
 int solution(vector<string> strArr) {
     int answer = 0;

@@ -1,89 +1,52 @@
 #include <iostream>
-#include <vector>
-#include <queue>
-#include <algorithm>
 using namespace std;
 
 int n;
-int cnt = 0;
 int home[17][17];
-
-enum dir{GARO,SERO,DAEGK};
-
-struct information {
-	int y;
-	int x;
-	int status;
-};
-
-bool is_in(int y,int x) {
-	if (y<1 || y>n || x<1 || x>n || home[y][x] == 1)return false;
-	else return true;
-}
-
-void bfs() {
-	queue<information>q;
-	q.push({ 1,2,GARO }); // 초기상태 정의 (처음에 1,1 과 1,2 차지하므로)
-
-	while (!q.empty()) {
-		int y = q.front().y;
-		int x = q.front().x;
-		int status = q.front().status;
-		q.pop();
-
-		if (y == n && x == n) {
-			cnt++;
-			continue;
-		}
-
-		// 가로/세로/대각선 별로 상태 정의 및 너비 우선 탐색
-		if (status == GARO) {
-
-			//가로 이동
-			if (is_in(y, x + 1))q.push({ y,x + 1,GARO });
-
-			//대각선 이동
-			if (is_in(y + 1, x) && is_in(y, x + 1) && is_in(y + 1, x + 1))q.push({ y + 1,x + 1,DAEGK });
-
-		}
-		else if (status == SERO) {
-
-			// 세로 이동
-			if (is_in(y + 1, x))q.push({ y + 1,x,SERO });
-
-			//대각선 이동
-			if (is_in(y + 1, x) && is_in(y, x + 1) && is_in(y + 1, x + 1))q.push({ y + 1,x + 1,DAEGK });
-
-
-		}
-		else if (status == DAEGK) {
-
-			//가로 이동
-			if (is_in(y, x + 1))q.push({ y,x + 1,GARO });
-			// 세로 이동
-			if (is_in(y + 1, x))q.push({ y + 1,x,SERO });
-			//대각선 이동
-			if (is_in(y + 1, x) && is_in(y, x + 1) && is_in(y + 1, x + 1))q.push({ y + 1,x + 1,DAEGK });
-
-		}
-
-	}
-	
-	cout << cnt;
-
-}
-
+int dp[17][17][3]; // dp[y][x][dir] : 파이프의 끝점이 (y,x)에 있고 dir상태일 때 경우의수
+// dir : 0= 가로, 1=세로, 2=대각
 
 int main() {
 	ios::sync_with_stdio(false);
-	cin.tie(0); cout.tie(0);
+	cin.tie(nullptr);
 
 	cin >> n;
-	for (int i = 1; i <= n; i++) {
-		for (int j = 1; j <= n; j++) {
-			cin >> home[i][j];
+	for (int y = 1; y <= n; y++) {
+		for (int x = 1; x <= n; x++)cin >> home[y][x];
+	}
+
+	// 시작 상태 : (1,1)-(1,2) 가로로 놓여있고 끝점이 1,2
+	if (home[1][1] == 0 && home[1][2] == 0)dp[1][2][0] = 1;
+
+	for (int y = 1; y <= n; y++) {
+		for (int x = 1; x <= n; x++) {
+
+			if (home[y][x] == 1)continue; // 끝점 자체가 벽이면 불가
+
+			// 1. 가로로 끝나는 경우
+			if (x - 1 >= 1 && home[y][x] == 0) {
+				dp[y][x][0] += dp[y][x - 1][0];
+				dp[y][x][0] += dp[y][x - 1][2];
+			}
+
+			// 2. 세로로 끝나는경우
+			if (y - 1 >= 1 && home[y][x] == 0) {
+				dp[y][x][1] += dp[y - 1][x][1];
+				dp[y][x][1] += dp[y - 1][x][2];
+			}
+
+			// 3. 대각으로 끝나는경우
+			if (y - 1 >= 1 && x - 1 >= 1) {
+				if (home[y - 1][x] == 0 && home[y][x - 1] == 0 && home[y][x] == 0) {
+					dp[y][x][2] += dp[y - 1][x - 1][0];
+					dp[y][x][2] += dp[y - 1][x - 1][1];
+					dp[y][x][2] += dp[y - 1][x - 1][2];
+				}
+			}
+
 		}
 	}
 
-	bfs();
+	cout << dp[n][n][0] + dp[n][n][1] + dp[n][n][2];
+
 }

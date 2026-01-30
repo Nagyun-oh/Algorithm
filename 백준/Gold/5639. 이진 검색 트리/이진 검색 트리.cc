@@ -1,56 +1,39 @@
 #include <iostream>
+#include <vector>
 using namespace std;
 
-struct BinarySearchTree {
-	int num;
-	BinarySearchTree* left;
-	BinarySearchTree* right;
+int tree[10001];
 
-	BinarySearchTree(int num_) :  num(num_), left(nullptr), right(nullptr){}
+// start : 현재 서브트리의 시작 인덱스, end : 끝 인덱스 ( 포함 x )
+void postOrder(int start, int end) {
 
-	void makeBinarySearchTree(int num_) {
-		BinarySearchTree* cur = this;
+	if (start >= end) return;
 
-		while (true) {
-			//왼쪽 서브트리
-			if (cur->num > num_) {
-				if (cur->left == nullptr) {
-					cur->left = new BinarySearchTree(num_);
-					break;
-				}
-				cur = cur->left;
-			}
-			//오른쪽 서브트리
-			else {
-				if (cur->right == nullptr) {
-					cur->right = new BinarySearchTree(num_);
-					break;
-				}
-				cur = cur->right;
-			}
-		}
+	int root = tree[start];
+	int split = start + 1;
+
+	// 루트보다 커지는 지점을 찾아서 왼쪽과 오른쪽 서브트리 구분
+	while (split < end && tree[split] < root) {
+		split++;
 	}
 
-};
-
-void postOrder(BinarySearchTree& curNode) {
-	if (curNode.left != nullptr) postOrder(*curNode.left);
-	if (curNode.right != nullptr) postOrder(*curNode.right);
-	cout << curNode.num << '\n';
+	postOrder(start + 1, split); // 왼쪽 서브트리 방문   L
+	postOrder(split, end); //오른쪽 서브트리 방문        R
+	cout << root << '\n';          //				 	 V
 
 }
 
 int main() {
 	ios::sync_with_stdio(false);
-	cin.tie(0); cout.tie(0);
+	cin.tie(0);
 
 	int n;
-	cin >> n;
-	BinarySearchTree rootNode(n);
-
+	int idx = 0;
 	while (cin >> n) {
-		rootNode.makeBinarySearchTree(n);
+		tree[idx++] = n;
 	}
-	postOrder(rootNode);
 
+	postOrder(0, idx);
+
+	return 0;
 }

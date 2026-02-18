@@ -1,16 +1,8 @@
 #include <iostream>
 #include <vector>
 #include <queue>
-#include <algorithm>
 #include <cstring>
 using namespace std;
-
-int n, m;
-int ary[101][101];
-int visited[101][101];
-int cnt;
-
-vector<pair<int, int>> cheezePos;
 
 int direct[4][2] = {
 	-1,0,
@@ -19,30 +11,31 @@ int direct[4][2] = {
 	0,1
 };
 
+int n, m;
+int ary[101][101];
+int visited[101][101];
+vector<pair<int, int>> chzPos;
+
 void input() {
-	// N x M
 	cin >> n >> m;
-	for (int i = 1; i <= n; i++) {
-		for (int j = 1; j <= m; j++) {
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < m; j++) {
 			cin >> ary[i][j];
 
-			if (ary[i][j] == 1) {
-				cheezePos.push_back({ i,j });
-			}
+			if (ary[i][j] == 1)chzPos.push_back({ i,j });
 		}
 	}
 }
 
-// 1.  외부 공기 = 2 , 내부공기 = 0 구분
-void bfs() {
-
-	memset(visited, 0,sizeof(visited));
+// 1. 외부공기와 내부공기를 구분해야함. ( bfs는 경계선 구분 가능)
+void bfs() 
+{
+	memset(visited, 0, sizeof(visited));
 	queue<pair<int, int>> q;
 
-	// 0,0 은 항상 공기이므로 여기서 시작
 	q.push({ 0,0 });
 	visited[0][0] = 1;
-	ary[0][0] = 2;
+	ary[0][0] = 2; // 외부공기는 2
 
 	while (!q.empty()) {
 		int y = q.front().first;
@@ -50,63 +43,69 @@ void bfs() {
 		q.pop();
 
 		for (int i = 0; i < 4; i++) {
-			int dy = y + direct[i][0];
-			int dx = x + direct[i][1];
+			int ny = y + direct[i][0];
+			int nx = x + direct[i][1];
 
-			if (dy<1 || dy>n || dx<0 || dx>m)continue;
+			if (ny < 0 || ny >= n || nx < 0 || nx >= m)continue;
 
-			if (!visited[dy][dx] && ary[dy][dx] != 1) {
-				visited[dy][dx] = 1;
-				ary[dy][dx] = 2;
-				q.push({ dy,dx });
+			if (!visited[ny][nx] && ary[ny][nx] != 1) {
+				ary[ny][nx] = 2; // 외부공기로 설정
+				visited[ny][nx] = 1; // 방문 처리 
+				q.push({ ny,nx }); 
 			}
-			
 		}
-	}
 
+	}
 }
 
-
 void solve() {
-	
-	
-	int time = 0;
-	while (!cheezePos.empty()) {
-		bfs(); // 외부공기, 내부 공기 구분
 
-		vector<pair<int, int>> nextCheeze;
+	int time = 0;
+
+	while (!chzPos.empty()) {
+
+		if (chzPos.empty())break; // 0. 녹일 치즈 없으면 끝내기
+
+		// 1. 외부공기 = 2, 내부공기 = 0 구분
+		bfs(); 
+
+		// 2. 녹일 수 있는 치즈와 녹일 수없는 치즈 구분
+		vector<pair<int, int>> nextChzPos;
 		vector<pair<int, int>> toMelt;
 
-		// 2. 현재 치즈들 검사
-		for (auto p : cheezePos) {
+		for (auto p : chzPos) {
+
 			int y = p.first;
 			int x = p.second;
 			int airCnt = 0;
 
 			for (int i = 0; i < 4; i++) {
-				
 				int ny = y + direct[i][0];
 				int nx = x + direct[i][1];
+
+				if (ny < 0 || ny >= n || nx < 0 || nx >= m)continue;
 
 				if (ary[ny][nx] == 2)airCnt++;
 			}
 
-			if (airCnt >= 2)toMelt.push_back({ y,x }); // 외부공기와 2변이상이면 녹여야하는 치즈
-			else nextCheeze.push_back({ y,x });
+			if (airCnt >= 2)toMelt.push_back({ y,x }); // 녹여야할 치즈 위치 저장
+			else nextChzPos.push_back({ y,x }); // 안 녹는 치즈 위치 저장
 
-			//3. 치즈 녹이기
-			for (auto p : toMelt) {
-				ary[p.first][p.second] = 0;
-			}
-
+			
 		}
 
-		cheezePos = nextCheeze; // 남은 치즈 목록 갱신
-		time++; // 시간 증가
-	}
-	
-	cout << time;
+		// 3. 치즈 녹이기
+		for (auto p : toMelt) {
+			ary[p.first][p.second] = 0;
+		}
 
+		// 4. 1시간 증가 및 치즈 위치 목록 갱신
+		time++;
+		chzPos = nextChzPos;
+
+	}
+
+	cout << time;
 }
 
 
@@ -116,5 +115,4 @@ int main() {
 
 	input();
 	solve();
-	
 }

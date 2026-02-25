@@ -1,19 +1,16 @@
 #include <iostream>
 #include <vector>
-#include <cmath>
-#include <iomanip>
+#include <cmath>    // abs()
+#include <iomanip> // 소수점 제어
 using namespace std;
-
-vector<pair<int, int>> v;
 
 int main() {
 	ios::sync_with_stdio(false);
-	cin.tie(0);
-	cout.tie(0);
+	cin.tie(0); cout.tie(0);
 
-	int N; // 3 <= N <=10,000
-
+	int N;
 	cin >> N;
+
 	vector<long long> x(N);
 	vector<long long> y(N);
 
@@ -21,7 +18,6 @@ int main() {
 		cin >> x[i] >> y[i];
 	}
 
-	// 신발끈 공식
 	long long sum1 = 0;
 	long long sum2 = 0;
 
@@ -34,5 +30,5 @@ int main() {
 	double area = abs(sum1 - sum2) / 2.0;
 
 	cout << fixed << setprecision(1) << area;
-	
+
 }

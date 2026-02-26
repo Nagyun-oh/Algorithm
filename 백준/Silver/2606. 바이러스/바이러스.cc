@@ -1,63 +1,42 @@
 #include <iostream>
 #include <vector>
+#include <algorithm>
 using namespace std;
 
-void init();
-void DFS(int node);
+int n; // 1<= n <=100
+int m;
+vector<int> v[101];
+vector<int> visited;
+int ans = 0;
 
-int n1; // 컴퓨터 수
-int n2; // 컴퓨터 쌍의 수
+void dfs(int curr) {
 
-vector<vector<int>> v;
-vector<bool>visited;
-int cnt = 0;
+	visited[curr] = 1;
 
-void init()
-{
-	int x;
-	cin >> n1;
-	v.resize(n1+1);
-	visited.resize(n1 + 1, false);
+	for (auto nx : v[curr]) {
 
-	cin >> n2;
-	int a, b;
-	for (int i = 0; i <n2; i++)
-	{
-		cin >> a >> b;
-		// 양방향 연결리스트
-		v[a].push_back(b);
-		v[b].push_back(a);
-	}
-
-}
-
-// DFS
-void DFS(int node)
-{
-	visited[node] = true;
-	cnt++;
-
-	for (int neighbor : v[node])
-	{
-		if (!visited[neighbor])
-		{
-			DFS(neighbor);
+		if (!visited[nx]) {
+			ans++;
+			dfs(nx);
 		}
-
 	}
 }
 
-
-
-
-// 자료구조 : DFS & 양방향 연결 그래프
-int main()
-{
+int main() {
 	ios::sync_with_stdio(false);
-	cin.tie(0);
-	cout.tie(0);
+	cin.tie(0); cout.tie(0);
 
-	init();
-	DFS(1);
-	cout << cnt - 1;
+	int from, to;
+
+	cin >> n >> m;
+	for (int i = 0; i < m; i++) {
+		cin >> from >> to;
+		v[from].push_back(to);
+		v[to].push_back(from);
+	}
+	
+	visited.assign(101, 0);
+	dfs(1);
+	cout << ans;
+
 }

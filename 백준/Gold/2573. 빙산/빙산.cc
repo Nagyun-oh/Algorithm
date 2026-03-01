@@ -8,7 +8,6 @@ using namespace std;
 int N, M; // 3<= N,M <=300
 int sea[301][301];
 int visited[301][301];
-int melt[301][301];
 int year;
 vector<pair<int, int>> icePos;
 
@@ -20,12 +19,11 @@ int direct[4][2] = {
 };
 
 void Melt() {
+	int melt[301][301] = { 0, };
 
 	for (auto a : icePos) {
 		int curY = a.first;
 		int curX = a.second;
-
-		if (sea[curY][curX] == 0)continue;
 
 		int cnt = 0;
 
@@ -41,10 +39,18 @@ void Melt() {
 		melt[curY][curX] = cnt;
 	}
 
+	icePos.clear();
+
 	for (int i = 0; i < N; i++) {
 		for (int j = 0; j < M; j++) {
 			sea[i][j] -= melt[i][j];
 			if (sea[i][j] < 0) sea[i][j] = 0;
+		}
+	}
+
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < M; j++) {
+			if (sea[i][j] > 0) icePos.push_back({ i,j });
 		}
 	}
 
@@ -98,12 +104,10 @@ void solve() {
 
 		// 1) 빙산 덩어리 개수 세기
 		int cnt = 0;
-		for (int i = 0; i < N; i++) {
-			for (int j = 0; j < M; j++) {
-				if (!visited[i][j] && sea[i][j] > 0) {
-					bfsForCheck(i,j);
-					cnt++;
-				}
+		for (auto pos : icePos) {
+			if (!visited[pos.first][pos.second]) {
+				bfsForCheck(pos.first, pos.second);
+				cnt++;
 			}
 		}
 

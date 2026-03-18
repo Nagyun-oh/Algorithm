@@ -2,17 +2,15 @@
 #include <vector>
 using namespace std;
 
-string str;
 int ary[9][9];
-vector<pair<int, int>> v;
-bool isEnd = false;
-int len;
+vector<pair<int, int>> pos;
+int isEnd = false;
 
-bool check(int y, int x, int value) {
+bool check(int y,int x,int value) {
 
 	for (int i = 0; i < 9; i++) {
-		if (ary[y][i] == value)return false; // 열 검사
-		if (ary[i][x] == value)return false; // 행 검사
+		if (value == ary[y][i])return false;
+		if (value == ary[i][x])return false;
 	}
 
 	int part_y = y / 3;
@@ -22,20 +20,18 @@ bool check(int y, int x, int value) {
 
 	for (int i = part_y; i < part_y + 3; i++) {
 		for (int j = part_x; j < part_x + 3; j++) {
-			if (ary[i][j] == value)return false;
+			if (value == ary[i][j])return false;
 		}
 	}
 
 	return true;
-}
 
+}
 
 void dfs(int cur) {
 
 	if (isEnd)return;
-
-	if (cur == len) {
-
+	else if (cur == pos.size()) {
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++) {
 				cout << ary[i][j];
@@ -45,13 +41,11 @@ void dfs(int cur) {
 		isEnd = true;
 	}
 	else {
-		int ny = v[cur].first;
-		int nx = v[cur].second;
+		int ny = pos[cur].first;
+		int nx = pos[cur].second;
 
 		for (int i = 1; i <= 9; i++) {
-
 			if (check(ny, nx, i)) {
-				// 백트래킹
 				ary[ny][nx] = i;
 				dfs(cur + 1);
 				ary[ny][nx] = 0;
@@ -60,24 +54,18 @@ void dfs(int cur) {
 	}
 }
 
-
 int main() {
 	ios::sync_with_stdio(false);
 	cout.tie(0); cin.tie(0);
 
-
-	/* 입력 */
+	string str;
 	for (int i = 0; i < 9; i++) {
 		cin >> str;
 		for (int j = 0; j < 9; j++) {
 			ary[i][j] = str[j] - '0';
-
-			if (ary[i][j] == 0) {
-				v.push_back({ i,j });
-			}
+			if (ary[i][j] == 0)pos.push_back({ i,j });
 		}
 	}
-	len = v.size();
 
 	dfs(0);
 

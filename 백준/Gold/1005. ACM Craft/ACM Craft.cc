@@ -4,38 +4,47 @@
 #include <algorithm>
 using namespace std;
 
-int T;	// 테스트케이스의 개수
-int D[1001];	// 각 건물당 건설에 걸리는 시간
-int inDegree[1001];
-int dp[1001];	// 해당 건물이 완료되는 시점의 시간
-vector<int> adj[1001];	// 인접 리스트
+int T;
+int D[1001];	// 입력받는 배열
+int dp[1001];	// DP
+int inDegree[1001];	// 진입차수
+vector<int> adj[1001];	// 인접행렬
 
+// 사이클이 없고, 방향성이 있는 그래프이므로, 위상정렬 알고리즘 사용
 void solve() {
-	int N, K, W;
 
+	/* 입력 처리*/
+	int N, K, W;
 	cin >> N >> K;
 	for (int i = 1; i <= N; i++) {
 		cin >> D[i];
-		inDegree[i] = 0;
+		
 		adj[i].clear();
 		dp[i] = 0;
+		inDegree[i] = 0;
 	}
+
 	for (int i = 0; i < K; i++) {
-		int x, y;
-		cin >> x >> y;
-		adj[x].push_back(y);
-		inDegree[y]++;	// 나중에 지을 건물의 진입 차수 증가
+		int u, v;
+		cin >> u >> v;
+		adj[u].push_back(v);
+		inDegree[v]++;
 	}
 	cin >> W;
-	
+
+	/* 알고리즘 수행 */
+
 	queue<int> q;
-	for (int i = 1; i <= N; i++) {
+
+	/* 시작점 설정 */
+	for (int i = 1; i <= N; i++){
 		if (inDegree[i] == 0) {
 			q.push(i);
-			dp[i] = D[i];	// 시작점
+			dp[i] = D[i];
 		}
 	}
 
+	/* 건물 W 짓는데 걸리는 시간 계산 */
 	while (!q.empty()) {
 		int cur = q.front();
 		q.pop();
@@ -48,11 +57,13 @@ void solve() {
 				q.push(next);
 			}
 		}
+
 	}
 
+	/* 출력 */
 	cout << dp[W] << '\n';
-}
 
+}
 
 int main() {
 	ios::sync_with_stdio(false);
@@ -60,6 +71,6 @@ int main() {
 
 	cin >> T;
 	while (T--)solve();
-	
-	
+
+
 }

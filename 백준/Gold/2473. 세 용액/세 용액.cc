@@ -3,8 +3,9 @@
 #include <algorithm>
 using namespace std;
 
-int N;	// 전체 용액의 수 3<=N<=5000
+int N;
 long long arr[5001];
+long long ans[3];
 
 int main() {
 	ios::sync_with_stdio(false);
@@ -15,24 +16,25 @@ int main() {
 		cin >> arr[i];
 	}
 
-	sort(arr+1, arr + N+1);
+	sort(arr + 1, arr + N + 1);
+
 	long long mn = 1e18;
 
-	long long ans[3] = { 0, };
-
-	for (int i = 1; i <= N - 2; i++) {
+	for (int i = 1; i <= N - 2;i++) {
 		int start = i + 1;
 		int end = N;
+
 		while (start < end) {
-			long long v = arr[i] + arr[start] + arr[end];
-			if (abs(v) < mn) {
-				mn = abs(v);
+			long long sum = arr[i] + arr[start] + arr[end];
+			if (abs(sum) < mn) {
+				mn = abs(sum);
 				ans[0] = arr[i];
 				ans[1] = arr[start];
-				ans[2] = arr[end];	
+				ans[2] = arr[end];
 			}
-			if (v < 0) start++;
+			if (sum < 0)start++;
 			else end--;
+			
 		}
 	}
 

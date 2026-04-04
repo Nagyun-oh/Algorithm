@@ -4,10 +4,9 @@
 #include <algorithm>
 using namespace std;
 
-int n, m;	// 가수의 수 n, 보조PD의 수 m
+int n, m;	// 가수의 수n, 보조PD의 수 m
 vector<int> adj[1001];
 int in_degree[1001];
-
 
 int main() {
 	ios::sync_with_stdio(false);
@@ -17,19 +16,21 @@ int main() {
 	for (int i = 0; i < m; i++) {
 		int cnt;
 		cin >> cnt;
-		
-		int prev, curr;
-		cin >> prev;	// 첫번째 가수 입력
+
+		int prev, next;
+		cin >> prev;
 		for (int j = 1; j < cnt; j++) {
-			cin >> curr;
-			// prev-> curr
-			adj[prev].push_back(curr);
-			in_degree[curr]++;
-			prev = curr;	
+			cin >> next;
+			adj[prev].push_back(next);
+			in_degree[next]++;
+
+			prev = next;
 		}
 	}
 
-	// 1. 위상정렬을 위한 큐 생성 및 초기화
+	/* 위상 정렬*/
+
+	// 1. 큐 생성 및 맨 앞 가수 결정 
 	queue<int>q;
 	for (int i = 1; i <= n; i++) {
 		if (in_degree[i] == 0) {
@@ -37,10 +38,10 @@ int main() {
 		}
 	}
 
-	// 2. 결과값을 담을 벡터
+	// 2. 결과 배열 생성
 	vector<int> result;
 
-	// 3. 위상 정렬 시작
+	// 3. 위상정렬 수행
 	while (!q.empty()) {
 		int cur = q.front();
 		q.pop();
@@ -52,20 +53,17 @@ int main() {
 				q.push(next);
 			}
 		}
-
 	}
-	
-	// 4. 결과 판별: 모든 가수가 결과에 포함되엇는지 확인
+
+	// 4. 결과 출력
 	if (result.size() != n) {
-		// 사이클이 발생하여 모든 가수를 세울 수 없는 경우
-		cout << 0 << '\n';
+		// 모든 가수를 담을 수 없음, 즉 사이클이 발생한 경우 0 출력
+		cout << 0;
 	}
 	else {
-		//성공적으로 줄을 세운 경우
 		for (int singer : result) {
 			cout << singer << '\n';
 		}
 	}
-	
-	return 0;
+
 }

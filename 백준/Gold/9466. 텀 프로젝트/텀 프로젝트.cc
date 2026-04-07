@@ -1,17 +1,13 @@
 #include <iostream>
 #include <queue>
-#include <cstring>
 #include <vector>
-#include <algorithm>
 using namespace std;
 
-int T;
-int n;
-int in_degree[100001];
+int T,n;
 vector<int> adj[100001];
+int in_degree[100001];
 
 void solve() {
-
 	queue<int> q;
 	int cnt = 0;
 
@@ -24,6 +20,7 @@ void solve() {
 	while (!q.empty()) {
 		int cur = q.front();
 		q.pop();
+
 		cnt++;
 
 		for (int next : adj[cur]) {
@@ -32,10 +29,11 @@ void solve() {
 				q.push(next);
 			}
 		}
-		
+
 	}
 
 	cout << cnt << '\n';
+
 }
 
 int main() {
@@ -45,7 +43,6 @@ int main() {
 	cin >> T;
 	while (T--) {
 		cin >> n;
-		
 		for (int i = 1; i <= n; i++) {
 			adj[i].clear();
 			in_degree[i] = 0;
@@ -57,8 +54,10 @@ int main() {
 			adj[i].push_back(to);
 			in_degree[to]++;
 		}
+
 		solve();
+
+
 	}
 
-	return 0;
 }

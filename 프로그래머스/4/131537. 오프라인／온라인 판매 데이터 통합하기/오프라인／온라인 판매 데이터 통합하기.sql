@@ -1,23 +1,27 @@
--- 1. 온라인 판매 데이터 추출
-SELECT  DATE_FORMAT(SALES_DATE,'%Y-%m-%d') AS SALES_DATE,
-        PRODUCT_ID,
-        USER_ID,
-        SALES_AMOUNT
+# 1. 온라인 상품 판매 데이터
+SELECT 
+    DATE_FORMAT(SALES_DATE,"%Y-%m-%d") as SALES_DATE,
+    PRODUCT_ID,
+    USER_ID,
+    SALES_AMOUNT
 FROM ONLINE_SALE
 WHERE SALES_DATE LIKE '2022-03%'
 
-UNION ALL
+UNION ALL # 합치기
 
--- 2. 오프라인 판매 데이터 추출 (USER_ID는 NULL로 처리)
-SELECT  DATE_FORMAT(SALES_DATE, '%Y-%m-%d') AS SALES_DATE,
-        PRODUCT_ID,
-        NULL AS USER_ID,
-        SALES_AMOUNT
+# 2. 오프라인 상품 판매 데이터
+SELECT 
+    DATE_FORMAT(SALES_DATE,"%Y-%m-%d") as SALES_DATE,
+    PRODUCT_ID,
+    NULL AS USER_ID,
+    SALES_AMOUNT
 FROM OFFLINE_SALE
 WHERE SALES_DATE LIKE '2022-03%'
 
--- 3. 합쳐진 결과 정렬
+# 3. 정렬
 ORDER BY 
     SALES_DATE ASC, 
-    PRODUCT_ID ASC,
+    PRODUCT_ID ASC, 
     USER_ID ASC;
+
+
